@@ -240,6 +240,48 @@ def createAdvanceAction(request):
 
         return HttpResponse(json.dumps({"limits": "虚拟机创建成功"}), content_type="application/json")
 
+@csrf_exempt
+def appAction(request):
+    print_log('Start_appTest')
+    if request.method == 'POST':
+        dag = {}
+        dagoriginal = request.POST["dag"].encode("utf-8")
+        dagList = dagoriginal.strip().split(" ")
+        for li in dagList:
+            pre = li.split(":")[0]
+            adj = li.split(':')[1]
+            if not adj:
+                dag[pre] = []
+            else:
+                dag[pre] = adj.split(',')
+        print('dag:')
+        print(dag)
+        load = {}
+        loadoriginal = request.POST['load'].encode('utf-8')
+        loadList = loadoriginal.strip().split(' ')
+        for l in loadList:
+            L = l.split(':')
+            load[L[0]] = float(L[1])
+        print('load:')
+        print(load)
+        deadline = float(request.POST['deadline'].encode("utf-8"))
+        print('deadline:')
+        print(deadline)
+        size = float(request.POST["datasize"].encode("utf-8"))
+        print(size)
+        result = {}
+        result['DAG'] = dag
+        result['load'] = load
+        result['deadline'] = deadline
+        result['size'] = size
+        result['app_id'] = '001'
+        result['arrival_time'] = 1500367968
+        print(result)
+        mttest = Scanning()
+        scheduler_res = mttest.scan(result)
+        print "res", json.dumps(scheduler_res)
+        return HttpResponse(json.dumps(scheduler_res), content_type="application/json")
+
 
 
 

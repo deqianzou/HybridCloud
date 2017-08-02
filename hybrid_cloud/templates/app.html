@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+{% block nav %}
+<li><a href="/index/">Main Page</a></li>
+<li ><a href="/overview/">Overview Page </a></li>
+<li><a href="/instance/">Instance Manage</a></li>
+<li><a href="/create/">Virtual instance</a> </li>
+<li  class="active"><a href="/app/">App<span class="sr-only">(current)</span></a></li>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="page-header">
+    <h2>应用创建&nbsp;<small>欢迎使用应用创建界面</small></h2>
+</div>
+<div class="page-header">
+    <h3>应用创建</h3>
+</div>
+
+<div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    测试一下
+</div>
+
+<div class="page-header">
+    <h4><b>系统调度算法:&nbsp; &nbsp; </b><small>Online optimization scheduling for scientific workflows</small></h4>
+</div>
+
+<div class="page-header">
+    <h4><b>需要用户输入的内容:&nbsp; &nbsp; </b><small>应用的有向无环图表示</small></h4>
+</div>
+
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">应用的任务关系描述</div>
+
+    <!-- Table -->
+    <table class="table table-hover" id="DAGtable">
+        <thead>
+        <tr>
+            <th>任务</th>
+            <th>后继任务</th>
+        </tr>
+        </thead>
+        <tbody id="DAGtablebody">
+        <tr>
+            <td>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="parent">
+                    <span class="input-group-addon"></span>
+                </div>
+            </td>
+            <td><div class="input-group">
+                <input type="text" class="form-control" id="successor">
+                <span class="input-group-addon"></span>
+            </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="page-header">
+    <h4><b>单击添加,添加关系描述； 单击确定，提交应用&nbsp; &nbsp; </b></h4>
+</div>
+
+<div class="btn-group">
+    <button type="button" class="btn btn-primary" id="addDAG">添加</button>
+</div>
+
+<div class="page-header">
+    <h4><b>需要用户输入的内容:&nbsp; &nbsp; </b><small>应用个任务的负载</small></h4>
+</div>
+
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">应用任务的负载</div>
+
+    <!-- Table -->
+    <table class="table table-hover" id="taskload">
+        <thead>
+        <tr>
+            <th>任务</th>
+            <th>负载</th>
+        </tr>
+        </thead>
+        <tbody id="LOADtablebody">
+        <tr>
+            <td>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="task">
+                    <span class="input-group-addon"></span>
+                </div>
+            </td>
+            <td><div class="input-group">
+                <input type="text" class="form-control" id="load">
+                <span class="input-group-addon"></span>
+            </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<div class="page-header">
+    <h4><b>单击添加,添加任务负载描述&nbsp; &nbsp; </b></h4>
+</div>
+<div class="btn-group">
+    <button type="button" class="btn btn-primary" id="addLOAD">添加</button>
+</div>
+
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">应用任务的deadline</div>
+        <div class="input-group">
+            <input type="text" class="form-control" id="taskdeadline">
+            <span class="input-group-addon"></span>
+        </div>
+</div>
+
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">size</div>
+        <div class="input-group">
+            <input type="text" class="form-control" id="datasize">
+            <span class="input-group-addon"></span>
+        </div>
+</div>
+
+<div class="row text-center outer">
+    <div class="btn-group">
+        <button type="button" class="btn btn-success" id="ensure">提交</button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/app.js' %}"></script>
+{% endblock %}
