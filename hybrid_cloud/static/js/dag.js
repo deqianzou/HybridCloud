@@ -75,7 +75,7 @@ function Trans(dag,load,deadline,datasize)
 				}
 			}
 			);
-//			window.location.href = "/app/";
+//			window.location.href = "/dag/";
 		},
 		error:function(xhr,type){
 			swal("failed");

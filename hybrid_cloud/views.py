@@ -48,3 +48,10 @@ def create(request):
         return render(request, 'create.html',{})
     else:
         return render(request, 'login.html', {})
+
+@csrf_exempt
+def DAG(request):
+    if (isLogin(request)):
+        return render(request, 'dag.html',{})
+    else:
+        return render(request, 'login.html', {})

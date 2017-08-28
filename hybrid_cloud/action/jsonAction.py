@@ -142,7 +142,7 @@ def createAdvanceAction(request):
         A = []
         num_small = int(small_num.encode('utf-8'))
         num_medium = int(medium_num.encode('utf-8'))
-        num_large = int(medium_num.encode('utf-8'))
+        num_large = int(large_num.encode('utf-8'))
         A.append(0)
         A.append(int(small_num.encode('utf-8')))
         A.append(int(medium_num.encode('utf-8')))
