@@ -5,9 +5,9 @@ from Process_aliyun import getinstanceDetal,getinstanceUsage
 
 class AliyunInterface:
     def __init__(self):
-        self.access_key = 'ha33EKzYxQlm1OGg'
-        self.access_secret = 'cPj7Q06bT04dKqxOiDnvLOIWTCno2t'
-        self.region_id = 'cn-hangzhou'
+        self.access_key = ''
+        self.access_secret = ''
+        self.region_id = ''
         self.client = client.AcsClient(self.access_key, self.access_secret, self.region_id)
 
     def getRegions(self):

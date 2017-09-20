@@ -17,9 +17,16 @@ def get_nova_credentials_v2(version='2',username=None,api_key=None,project_id=No
         return d
 
 class MonitorApi(object):
-    def __init__(self, version='2',username=None, api_key=None, project_id=None,auth_url='',**kwargs):
-        self.nova_client = nvclient.Client(version, username, api_key, project_id, auth_url,**kwargs)
-        self.cinder_client = cdclient.Client(username, api_key, project_id, auth_url,**kwargs)
+    def __init__(self, version='2.1',username=None, api_key=None, project_id=None,auth_url='',**kwargs):
+        loader = loading.get__plugin_loader('password')
+        auth = loader.load_from_options(auth_url = auth_url,
+                                        username = username,
+                                        user_domain_name = u'Default',
+                                        password = api_key,
+                                        project_domain_name = u'Default')
+        session = session.Session(auth = auth)
+        self.nova_client = nvclient.Client(version, session = session)
+        self.cinder_client = cdclient.Client(version, session = session)
         
     def getServerList(self):
         return self.nova_client.servers.list()
