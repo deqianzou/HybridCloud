@@ -5,16 +5,19 @@ Created on Nov 25, 2015
 '''
 import novaclient.client as nvclient
 import cinderclient.v2.client as cdclient
+from heatclient.client import Client as Heat_Client
 from hybrid_cloud.util.Printlog import print_log
 
-def get_nova_credentials_v2(version='2',username=None,api_key=None,project_id=None,auth_url='',**kwargs):
+
+def get_nova_credentials_v2(version='2', username=None, api_key=None, project_id=None, auth_url='', **kwargs):
         d = {}
-        d["version"] = '2'
+        d["version"] = version
         d['username'] = username
         d['api_key'] = api_key
         d['project_id'] = project_id
         d['auth_url'] = auth_url
         return d
+
 
 class MonitorApi(object):
     def __init__(self, version='2.1',username=None, api_key=None, project_id=None,auth_url='',**kwargs):
@@ -27,6 +30,7 @@ class MonitorApi(object):
         session = session.Session(auth = auth)
         self.nova_client = nvclient.Client(version, session = session)
         self.cinder_client = cdclient.Client(version, session = session)
+        self.heat_client = Heat_Client('1', session = session)
         
     def getServerList(self):
         return self.nova_client.servers.list()
@@ -78,7 +82,7 @@ class MonitorApi(object):
             usage["disk"] = self.nova_client.flavors.get(server.flavor["id"]).disk
             usages.append(usage)
         return usages
-    
+
     def createDefaultInstance(self,createspec):
         print_log('Start create instance')
         print createspec['type']
@@ -129,9 +133,7 @@ class MonitorApi(object):
         detail["availability_zone"] = getattr(server, "OS-EXT-AZ:availability_zone")
         #########end#########33
         return detail
-    
-    
-    
+
     def stopServer(self,id):
         server = self.nova_client.servers.get(id)
         server.stop()
@@ -143,7 +145,6 @@ class MonitorApi(object):
     def terminateServer(self,id):
         server = self.nova_client.servers.get(id)
         server.delete()
-    
     
     def addFloatingIps(self,id):
         floatingip = self.nova_client.floating_ips.create()

@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^instance/', views.instance),
     url(r'^create/', views.create),
     url(r'^dag/', views.DAG),
+    url(r'^auto_scaling/', views.auto_scaling),
     url(r'^action/loginAction/',jsonaction.loginAction),
     url(r'^action/logoutAction/',jsonaction.logoutAction),
     url(r'^action/overviewAction/',jsonaction.overviewAction),

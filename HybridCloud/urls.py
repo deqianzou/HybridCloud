@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^instance/', include('hybrid_cloud.urls')),
     url(r'^create/', include('hybrid_cloud.urls')),
     url(r'^dag/', include('hybrid_cloud.urls')),
+    url(r'^auto_scaling/', include('hybrid_cloud.urls')),
     url(r'^action/loginAction/', include('hybrid_cloud.urls')),
     url(r'^action/logoutAction/', include('hybrid_cloud.urls')),
     url(r'^action/overviewAction/', include('hybrid_cloud.urls')),

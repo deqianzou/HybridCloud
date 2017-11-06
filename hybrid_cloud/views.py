@@ -55,3 +55,10 @@ def DAG(request):
         return render(request, 'dag.html',{})
     else:
         return render(request, 'login.html', {})
+
+@csrf_exempt
+def auto_scaling(request):
+    if(isLogin(request)):
+        return render(request, 'auto_scaling.html',{})
+    else:
+        return render(request, 'login.html', {})

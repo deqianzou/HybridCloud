@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block nav %}
+<li class="active"><a href="/index/">Main Page <span class="sr-only">(current)</span></a></li>
+<li><a href="/overview/">Overview Page</a></li>
+<li><a href="/instance/">Instance Manage</a></li>
+<li><a href="/create/">ODA scheduler</a> </li>
+<li><a href="/dag/">DAG scheduler</a></li>
+<li  class="active"><a href="/auto_scaling/">Auto Scaling<span class="sr-only">(current)</span></a></li>
+{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+  <h2>弹性扩容&nbsp;<small>基于openstack和阿里云的混合云弹性扩容功能</small></h2>
+</div>
+
+<div class="progress">
+  <div class="progress-bar progress-bar-success progress-bar-striped" style="width: 50%">
+    <span class="sr-only">35% Complete (success)</span>
+  </div>
+  <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 45%">
+    <span class="sr-only">20% Complete (warning)</span>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>功能简介</h3>
+</div>
+
+<div class="panel panel-info"> <!-- panel-primary -->
+      <div class="panel-heading">
+            <h3 class="panel-title">监测资源</h3>
+      </div>
+      <div class="panel-body">
+        实时监测混合云运行过程中的资源使用情况
+      </div>
+</div>
+
+<div class="panel panel-success"> <!-- panel-primary -->
+      <div class="panel-heading">
+            <h3 class="panel-title">及时扩容</h3>
+      </div>
+      <div class="panel-body">
+        当虚拟机资源紧张时，系统自动扩建实例以保证任务的运行
+      </div>
+</div>
+
+<div class="panel panel-info"> <!-- panel-primary -->
+      <div class="panel-heading">
+            <h3 class="panel-title">资源回收</h3>
+      </div>
+      <div class="panel-body">
+        负载下降后，系统及时回收资源
+      </div>
+</div>
+
+<!-- Single button -->
+{% endblock %}
+
+
