@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% load static %}
+{% block nav %}
+<li><a href="/index/">Main Page</a></li>
+<li><a href="/overview/">Overview Page </a></li>
+<li><a href="/instance/">Instance Manage</a></li>
+<li class="active"><a href="/basic_strategy/">Basic Strategy<span class="sr-only">(current)</span></a></li>
+<li><a href="/create/">ODA scheduler</a></li>
+<li><a href="/dag/">DAG scheduler</a></li>
+<li><a href="/auto_scale/">Auto Scaling</a></li>
+{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+    <h2>基本调度策略&nbsp;<small>分别面向安全、性能、价格、均衡</small>
+    </h2>
+</div>
+<div class="page-header">
+    <h3>虚拟机创建</h3>
+</div>
+
+<div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    虚拟机创建是通过用户指定需要的参数并选择优先策略，根据用户要求完成创建
+</div>
+
+<div class="page-header">
+    <h4><b>系统调度算法:&nbsp; &nbsp; </b>
+        <small>针对用户所选的优先条件对性能参数进行筛选并给出方案</small>
+    </h4>
+</div>
+
+<div class="page-header">
+    <h4><b>用户可选的私有云虚拟机镜像种类:&nbsp; &nbsp; </b>
+        <small>不同计算能力，存储能力的虚拟机配额</small>
+    </h4>
+</div>
+
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">虚拟机可选配额</div>
+
+    <!-- Table -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>虚拟内核(单位:个)</th>
+            <th>内存(单位:GB)</th>
+            <th>磁盘总计(单位:GB)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>m.small</td>
+            <td>1</td>
+            <td>2</td>
+            <td>20</td>
+        </tr>
+        <tr>
+            <td>m.medium</td>
+            <td>2</td>
+            <td>4</td>
+            <td>40</td>
+        </tr>
+        <tr>
+            <td>m.large</td>
+            <td>4</td>
+            <td>8</td>
+            <td>80</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="page-header">
+
+</div>
+
+<div class="btn-group">
+    <button type="button" class="btn btn-primary" id="start">开始创建</button>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">创建虚拟机</h4>
+            </div>
+
+            <div class="modal-body">
+                <p><b>参数输入</b></p>
+
+                <div class="panel panel-warning">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">虚拟机性能要求</div>
+
+                    <!-- Table -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>性能指标</th>
+                            <th>要求</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><b>cpu（个）</b></td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" id="cpu">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>内存（MB）</b></td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" id="memory">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>磁盘（GB）</b></td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1" id="disk">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>安全系数（1-5）</b></td>
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" aria-describedby="basic-addon1"
+                                           id="sucurity">
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="radio" id="private" >
+                    <label type="radio">
+                        <input type="radio" class="toogle" value=-1>必须创建在私有云上
+                    </label>
+                    <label type="radio">
+                        <input type="radio" class="toogle" value=-2>必须创建在公有云上
+                    </label>
+                    <label type="radio">
+                        <input type="radio" class="toogle" value=1>私有云优先
+                    </label>
+                    <label type="radio">
+                        <input type="radio" class="toogle" value=2>公有云优先
+                    </label>
+                    <label type="radio">
+                        <input type="radio" class="toogle" value=0 checked="checked">无要求
+                    </label>
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">策略选择</div>
+                        <table class="table">
+                            <thead></thead>
+                            <tbody>
+                            <th>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default"
+                                            id="sucurity_first" data-toggle="dropdown">
+                                        安全优先 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                            id="price_first" data-toggle="dropdown">
+                                        价格优先 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                            id="performance_first" data-toggle="dropdown">
+                                        性能优先 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                    </ul>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                            id="balance" data-toggle="dropdown">
+                                        均衡策略 <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                    </ul>
+                                </div>
+                            </th>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="createinstance">创建</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% endblock %}
+
+    {% block js %}
+    <script src="{% static 'js/basic_strategy.js' %}"></script>
+    {% endblock %}

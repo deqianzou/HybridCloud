@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	
+
 	$("#loginBtn").on("click",function()
 	{
 		var username = $("#inputUser").val();
@@ -7,8 +7,8 @@ $(document).ready(function(){
 		//alert("user:"+username+";pwd:"+password);
 		LoginCheck(username,password);
 	});
-})
-
+}
+)
 
 function LoginCheck(username,password)
 {

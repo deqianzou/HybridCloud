@@ -9,15 +9,21 @@ from django.views.decorators.csrf import csrf_exempt
 from hybrid_cloud.api.ODA import ODA
 from hybrid_cloud.api.AliyunApi import AliyunInterface
 import time as time_module
+from hybrid_cloud.api.algorithm3 import Scanning
+import threading
+import math
+import ceilometerclient.client
+import inspect
+import ctypes
 
 @csrf_exempt
 def loginAction(request):
     print_log('Start loginAction')
+    # print request.POST
     if request.method == "POST":
         # get username pwd from post method
-        username = request.POST["username"]
-        password = request.POST["password"]
-        # print username, password
+        username = request.POST['username']
+        password = request.POST['password']
         if username == passwd.Identity["username"] and password == passwd.Identity["passwd"]:
             # return HttpResponseRedirect("/main/")
             response = HttpResponse(json.dumps({}), content_type="application/json")
@@ -28,6 +34,7 @@ def loginAction(request):
             request.session["cloud"] = cloudinfo
             # create cookies
             response.set_cookie('username', username, 3600)  # create cookies
+            print 'response: ', response.status_code
             return response
 
 @csrf_exempt
@@ -113,6 +120,31 @@ def instanceActionsAction(request):
             elif "addfloatingip" == actions:
                 cloud.addFloatingIps(serverid)
         return HttpResponse(json.dumps({}), content_type="application/json")
+
+@csrf_exempt
+def getServerInfo(request, limit=1):
+    print_log("Get instance performance information")
+    response = {}
+    if request.method == 'POST':
+        limit = int(request.POST['limit'])
+        cclient = ceilometerclient.client.get_client(2, os_username='',
+                                                 os_password='',
+                                                 os_tenant_name='', os_auth_url='')
+        querya = [dict(field='resource_id', op='eq', value=current_serverid),
+             dict(field='meter', op='eq', value='cpu_util')]
+        queryb = [dict(field='resource_id', op='eq', value=current_serverid),
+              dict(field='meter', op='eq', value='memory.resident')]
+        samplea = cclient.new_samples.list(q=querya, limit)
+        sampleb = cclient.new_samples.list(q=queryb, limit)
+        cpu_info = []
+        mem_info = []
+        for i in range(20):
+            cpu_info.append(samplea[i].volume)
+            mem_info.append(sampleb[i].volume)
+        response['cpu'] = cpu_info
+        response['memory'] = mem_info
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 @csrf_exempt
 def AliyunActionsAction(request):

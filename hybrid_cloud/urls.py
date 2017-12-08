@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^action/logoutAction/',jsonaction.logoutAction),
     url(r'^action/overviewAction/',jsonaction.overviewAction),
     url(r'^action/instanceActionsAction/',jsonaction.instanceActionsAction),
+    url(r'^/action/getserverinfo/', jsonaction.getServerInfo),
     url(r'^action/createAdvanceAction/',jsonaction.createAdvanceAction),
     url(r'^action/AliyunActionsAction/', jsonaction.AliyunActionsAction),
 

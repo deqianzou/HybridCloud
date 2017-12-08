@@ -1,8 +1,9 @@
 function instanceAction(obj){
 	var action = obj.value;//$(obj).val()
 	var instanceId = $(obj).parent().parent().find("td").eq(0).html();
-//	.eq(1).value;
 	var cloudName = $(obj).parent().parent().find("td").eq(1).html();
+
+	var newwindow = window.open("about:blank");
 	$.ajax({
 		url:"/action/instanceActionsAction/",
 		//async: false, //if we want to3 lock the screen
@@ -18,8 +19,14 @@ function instanceAction(obj){
 		},
 		success:function(data){
 			//success
-			swal("successed! please refresh");
-//			location.reload(); //F5,refresh
+			if(data["monitor_or_not"]=="monitor"){
+			    swal("successed! please refresh this page.");
+			    newwindow.location.href="/monitor/";
+			    newwindow.focus();
+			} else{
+			    swal("successed! please refresh this page.");
+			    newwindow.close();
+			}
 		},
 		error:function(xhr,type){
 			//do nothing

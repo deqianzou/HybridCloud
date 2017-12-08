@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^action/logoutAction/', include('hybrid_cloud.urls')),
     url(r'^action/overviewAction/', include('hybrid_cloud.urls')),
     url(r'^action/instanceActionsAction/', include('hybrid_cloud.urls')),
+    url(r'^/action/getserverinfo/', include('hybrid_cloud.urls')),
     url(r'^action/createAdvanceAction/', include('hybrid_cloud.urls')),
     url(r'^action/AliyunActionsAction/', include('hybrid_cloud.urls')),
 
