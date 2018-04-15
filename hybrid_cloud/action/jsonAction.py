@@ -1,20 +1,19 @@
 # -*- coding:utf-8 -*-
-from hybrid_cloud.util.Printlog import print_log
-import hybrid_cloud.util.Passwd as passwd
-from hybrid_cloud.api import Monitor
-import hybrid_cloud.util.Cloud as Cloud
-from django.http import HttpResponse, HttpResponseRedirect
 import json
-from django.views.decorators.csrf import csrf_exempt
-from hybrid_cloud.api.ODA import ODA
-from hybrid_cloud.api.AliyunApi import AliyunInterface
 import time as time_module
-from hybrid_cloud.api.algorithm3 import Scanning
-import threading
-import math
+
 import ceilometerclient.client
-import inspect
-import ctypes
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+
+import hybrid_cloud.util.Cloud as Cloud
+import hybrid_cloud.util.Passwd as passwd
+from Adaptor import OpenstackAdaptor
+from Adaptor.AliyunAdaptor import AliyunInterface
+from Scheduler.DAGScheduler.algorithm3 import Scanning
+from Scheduler.ODAScheduler.ODA import ODA
+from hybrid_cloud.util.Printlog import print_log
+
 
 @csrf_exempt
 def loginAction(request):
@@ -24,7 +23,20 @@ def loginAction(request):
         # get username pwd from post method
         username = request.POST['username']
         password = request.POST['password']
-        if username == passwd.Identity["username"] and password == passwd.Identity["passwd"]:
+        if username == passwd.AdminIdentity["username"] and password == passwd.AdminIdentity["passwd"]:
+            # return HttpResponseRedirect("/main/")
+            response = HttpResponse(json.dumps({}), content_type="application/json")
+            cloudinfo={}
+            cloudinfo["openstack"] = {"user": passwd.Identity['clouduser'], "pwd": passwd.Identity['cloudpasswd'],
+                                     "project":passwd.Identity['project'], "endpoint":passwd.Identity['endpoint']}
+            # create session
+            request.session["cloud"] = cloudinfo
+            # create cookies
+            response.set_cookie('username', username, 3600)  # create cookies
+            print 'response: ', response.status_code
+            return response
+
+        if username == passwd.SJTUCSIdentity["username"] and password == passwd.SJTUCSIdentity["passwd"]:
             # return HttpResponseRedirect("/main/")
             response = HttpResponse(json.dumps({}), content_type="application/json")
             cloudinfo={}
@@ -55,14 +67,14 @@ def overviewAction(request):
         cloudname = request.POST["cloud"]
         # print authurl
         # print cloudname
-        cloud = Monitor.Monitor(**Cloud.get_nova_credentials(request, cloudname))
+        cloud = OpenstackAdaptor.Monitor(**Cloud.get_nova_credentials(request, cloudname))
         limits = cloud.getLimits()
         if limits !=None:
             return HttpResponse(json.dumps({"limits": limits}), content_type="application/json")
 
 def get_private_usage_Action(request):
     print_log('Start get private usage')
-    cloud = Monitor.Monitor(**Cloud.get_nova_credentials(request, 'openstack'))
+    cloud = OpenstackAdaptor.Monitor(**Cloud.get_nova_credentials(request, 'openstack'))
     Usages = cloud.getUsages()
     private_usage = []
     for item in Usages:
@@ -79,7 +91,7 @@ def get_private_usage_Action(request):
 
 def get_private_instance_Action(request):
     print_log('Start get private instance')
-    cloud = Monitor.Monitor(**Cloud.get_nova_credentials(request, 'openstack'))
+    cloud = OpenstackAdaptor.Monitor(**Cloud.get_nova_credentials(request, 'openstack'))
     instances = cloud.getInstanceDetailAll()
     print instances
     private_instance = []
@@ -108,7 +120,7 @@ def instanceActionsAction(request):
         # print actions,cloudname,serverid
         print actions,cloudname,serverid
         cloudname = cloudname.strip()
-        cloud = Monitor.Monitor(**Cloud.get_nova_credentials(request,cloudname))
+        cloud = OpenstackAdaptor.Monitor(**Cloud.get_nova_credentials(request, cloudname))
         print cloud.auth_url
         if actions:
             if "start" == actions:
@@ -166,7 +178,7 @@ def createAdvanceAction(request):
         large_num = request.POST["large_num"]
         time = request.POST["time"]
         is_private = request.POST["is_private"]
-        cloud = Monitor.Monitor(**Cloud.get_nova_credentials(request, "openstack"))
+        cloud = OpenstackAdaptor.Monitor(**Cloud.get_nova_credentials(request, "openstack"))
         resource = cloud.getResource()
         print small_num,medium_num,large_num,time,type(is_private),type(resource["vcpu"]),resource["ram"],resource["disk"]
         R_private=[]

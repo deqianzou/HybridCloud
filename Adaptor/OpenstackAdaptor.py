@@ -4,7 +4,7 @@ Created on Nov 26, 2015
 @author: stack
 '''
 from __future__ import division
-import MonitorApi
+import hybrid_cloud.api.MonitorApi
 class Monitor(object):
     def __init__(self, username=None,api_key=None,project_id=None,auth_url='',**kwargs):
         '''
@@ -21,11 +21,11 @@ class Monitor(object):
     def getAuth(self):
         try:
             if not self.authClient:
-                client = MonitorApi.MonitorApi(username=self.username,
-                                                api_key = self.api_key,
-                                                project_id = self.project_id,
-                                                auth_url = self.auth_url,
-                                                **self.kwargs)
+                client = hybrid_cloud.api.MonitorApi.MonitorApi(username=self.username,
+                                                                api_key = self.api_key,
+                                                                project_id = self.project_id,
+                                                                auth_url = self.auth_url,
+                                                                **self.kwargs)
                 self.authClient = client  ##initialize self.authClient when first call getAuth
             else:
                 client = self.authClient 

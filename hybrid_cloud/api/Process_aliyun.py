@@ -1,5 +1,5 @@
 def getinstanceDetal(request):
-    print request['TotalCount']
+    #print request['TotalCount']
     num = int(request['TotalCount'])
     instances = request['Instances']['Instance']
     ret=[]

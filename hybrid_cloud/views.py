@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from hybrid_cloud.action.jsonAction import get_private_usage_Action, get_private_instance_Action, loginAction
-from hybrid_cloud.api.AliyunApi import AliyunInterface
-from django.template import  Context
+
+from Adaptor.AliyunAdaptor import AliyunInterface
+from hybrid_cloud.action.jsonAction import get_private_usage_Action, get_private_instance_Action
+
+
 # Create your views here.
 def isLogin(request):
     username = request.COOKIES.get('username')

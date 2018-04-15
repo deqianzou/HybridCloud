@@ -1,7 +1,7 @@
 import json
 from aliyunsdkcore import client
 from aliyunsdkecs.request.v20140526 import DescribeRegionsRequest, DescribeInstancesRequest, CreateInstanceRequest, DeleteInstanceRequest
-from Process_aliyun import getinstanceDetal,getinstanceUsage
+from hybrid_cloud.api.Process_aliyun import getinstanceDetal,getinstanceUsage
 
 class AliyunInterface:
     def __init__(self):
