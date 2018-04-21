@@ -1,0 +1,62 @@
+from tornado import ioloop
+from torpc import RPCServer
+from AliyunAdaptor import AliyunInterface
+from OpenstackAdaptor import Monitor
+
+class Server:
+    def __int__(self, ip, port):
+        self.server = RPCServer((ip, port))
+        self.Aliyun = AliyunInterface()
+        self.openstack = Monitor()
+
+    @server.service.register()
+    def getInstanceList_Aliyun(self):
+        return self.Aliyun.getInstanceList()
+
+    @server.service.register()
+    def getRegions_Aliyun(self):
+        return self.Aliyun.getRegions()
+
+    @server.service.register()
+    def getUsageList_Aliyun(self):
+        return self.Aliyun.getUsageList()
+
+    @server.service.register()
+    def createInstance_Aliyun(self, instance_type, image_id):
+        return self.Aliyun.createInstance(instance_type, image_id)
+
+    @server.service.register()
+    def deleteInstance_Aliyun(self, instance_id):
+        return self.Aliyun.deleteInstance(instance_id)
+
+    @server.service.register()
+    def getInstanceList_Openstack(self):
+        return self.openstack.getUsages()
+
+    @server.service.register()
+    def getInstanceDetailAll_Openstack(self):
+        return self.openstack.getInstanceDetailAll()
+
+    @server.service.register()
+    def createInstance_Openstack(self, createspec):
+        return self.openstack.createInstance(createspec)
+
+    @server.service.register()
+    def deleteInstance_Openstack(self, instance_id):
+        return self.openstack.terminateServer(instance_id)
+
+    @server.service.register()
+    def getResource_Openstack(self, instance_id):
+        return self.openstack.getResource()
+
+    @server.service.register()
+    def getLimits_Openstack(self, instance_id):
+        return self.openstack.getLimits()
+
+    def run(self):
+        self.server.start()
+        ioloop.IOLoop.instance().start()
+
+if __name__ == '__main__':
+    server = Server('127.0.0.1', 1025)
+    server.run()

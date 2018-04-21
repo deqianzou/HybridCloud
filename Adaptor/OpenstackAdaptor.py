@@ -122,7 +122,7 @@ class Monitor(object):
                 servers = client.getServerList()
                 # print servers
                 for server in servers:
-                    print server.name
+                    # print server.name
                     details.append(client.getInstanceDetail(server.id))
         except Exception,e:
             print Exception,":",e
